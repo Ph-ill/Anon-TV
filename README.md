@@ -15,12 +15,12 @@ Anon TV provides a seamless experience for viewing webm and image content from p
 
 ## Tech Stack
 
-- **Language:** Kotlin ![Kotlin Logo](https://upload.wikimedia.org/wikipedia/commons/7/74/Kotlin_logo.svg) - Modern, concise, and safe.
-- **Build Tool:** Gradle ![Gradle Logo](https://upload.wikimedia.org/wikipedia/commons/1/17/Gradle_logo.svg) - Flexible build automation.
-- **Video Player:** ExoPlayer - Customizable and performant media playback.
-- **Networking:** Ktor ![Ktor Logo](https://raw.githubusercontent.com/ktorio/ktor-documentation/main/images/ktor_logo.png) - Asynchronous API communication.
-- **Serialization:** Kotlinx Serialization - Efficient JSON parsing.
-- **Android Libraries:** AndroidX ![Android Jetpack Logo](https://developer.android.com/images/jetpack/jetpack-logo.svg) & Leanback - Modern Android development and TV UI.
+- **Language:** Kotlin (Icon to be added later)
+- **Build Tool:** Gradle (Icon to be added later)
+- **Video Player:** ExoPlayer
+- **Networking:** Ktor (Icon to be added later)
+- **Serialization:** Kotlinx Serialization
+- **Android Libraries:** AndroidX & Leanback (Icon to be added later)
 
 ## Getting Started
 
