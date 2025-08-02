@@ -1,6 +1,8 @@
 # Anon TV
 
-<img src="images/icon.png" alt="Anon TV Logo" width="20%"/>
+<p align="center">
+  <img src="images/icon.png" alt="Anon TV Logo" width="20%"/>
+</p>
 
 An Android TV application for browsing imageboard media.
 
