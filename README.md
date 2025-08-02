@@ -1,10 +1,10 @@
-# imageboard Android TV App
+# Anon TV App
 
-This is an Android TV app for browsing webms from https://boards.imageboard.org/wsg/.
+This is an Android TV app for browsing webms from popular imageboards.
 
 ## Features
 
-*   Browse a list of current threads from /wsg/.
+*   Browse a list of current threads from popular imageboards.
 *   Select a thread to view its media (videos and images).
 *   Navigate through media in full-screen using the TV remote (left/right for previous/next).
 *   Return to the thread list from the media viewer using the back button.
