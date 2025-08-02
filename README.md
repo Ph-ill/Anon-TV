@@ -1,27 +1,26 @@
 # Anon TV
 
-## An Android TV Application for Browsing Imageboard Media
+An Android TV application for browsing imageboard media.
 
-Anon TV is an Android TV application designed to provide a seamless and intuitive experience for browsing webm and image content from popular imageboards directly on your television. Built with a focus on performance and user experience on TV devices, it leverages modern Android development practices and robust libraries.
+Anon TV provides a seamless experience for viewing webm and image content from popular imageboards directly on your television. It's built with modern Android development practices, focusing on performance and user experience on TV devices.
 
 ## Features
 
-*   **Thread Browsing:** Easily navigate and view a list of active threads from configured imageboards.
-*   **Media Playback:** Select a thread to view its associated media, including videos (webms) and images.
-*   **Full-Screen Viewer:** Enjoy media in an immersive full-screen mode.
-*   **Remote Navigation:** Intuitive navigation through media using standard TV remote controls (left/right for previous/next media item).
-*   **Seamless Back Navigation:** Return to the thread list from the media viewer with a single press of the back button.
-*   **Content Refresh:** Refresh the list of threads from the main menu to get the latest content.
+- Thread Browsing: Navigate and view active threads from imageboards.
+- Media Playback: View videos (webms) and images from selected threads.
+- Full-Screen Viewer: Immersive full-screen media experience.
+- Remote Navigation: Use TV remote (left/right) for media navigation.
+- Back Navigation: Easily return to the thread list.
+- Content Refresh: Refresh threads from the main menu.
 
 ## Tech Stack
 
-*   **Language:** Kotlin - A modern, concise, and safe programming language for Android development.
-*   **Build Tool:** Gradle - Powerful and flexible build automation system for Android projects.
-*   **Video Player:** ExoPlayer - A highly customizable and performant media player for Android, ideal for handling various video formats.
-*   **Networking:** Ktor - A flexible and asynchronous framework for building connected applications, used here for efficient API communication with imageboards.
-*   **Serialization:** Kotlinx Serialization - For efficient and safe JSON parsing and object mapping with Ktor.
-*   **AndroidX Libraries:** Modern Android Jetpack libraries for robust and maintainable app development.
-*   **Leanback Library:** Specifically designed for building user interfaces on Android TV, ensuring an optimized and user-friendly experience.
+- **Language:** Kotlin ![Kotlin Logo](https://upload.wikimedia.org/wikipedia/commons/7/74/Kotlin_logo.svg) - Modern, concise, and safe.
+- **Build Tool:** Gradle ![Gradle Logo](https://upload.wikimedia.org/wikipedia/commons/1/17/Gradle_logo.svg) - Flexible build automation.
+- **Video Player:** ExoPlayer - Customizable and performant media playback.
+- **Networking:** Ktor ![Ktor Logo](https://raw.githubusercontent.com/ktorio/ktor-documentation/main/images/ktor_logo.png) - Asynchronous API communication.
+- **Serialization:** Kotlinx Serialization - Efficient JSON parsing.
+- **Android Libraries:** AndroidX ![Android Jetpack Logo](https://developer.android.com/images/jetpack/jetpack-logo.svg) & Leanback - Modern Android development and TV UI.
 
 ## Getting Started
 
