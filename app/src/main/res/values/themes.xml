@@ -1,3 +1,3 @@
 <resources>
-    <style name="Theme.imageboardAndroidTv" parent="Theme.Leanback" />
+    <style name="Theme.AnonTv" parent="Theme.Leanback" />
 </resources>

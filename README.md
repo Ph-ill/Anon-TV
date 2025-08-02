@@ -1,5 +1,7 @@
 # Anon TV
 
+![Anon TV Logo](images/icon.png)
+
 An Android TV application for browsing imageboard media.
 
 Anon TV provides a seamless experience for viewing webm and image content from popular imageboards directly on your television. It's built with modern Android development practices, focusing on performance and user experience on TV devices.
@@ -15,12 +17,12 @@ Anon TV provides a seamless experience for viewing webm and image content from p
 
 ## Tech Stack
 
-- **Language:** Kotlin (Icon to be added later)
-- **Build Tool:** Gradle (Icon to be added later)
+- **Language:** Kotlin
+- **Build Tool:** Gradle
 - **Video Player:** ExoPlayer
-- **Networking:** Ktor (Icon to be added later)
+- **Networking:** Ktor
 - **Serialization:** Kotlinx Serialization
-- **Android Libraries:** AndroidX & Leanback (Icon to be added later)
+- **Android Libraries:** AndroidX & Leanback
 
 ## Getting Started
 
