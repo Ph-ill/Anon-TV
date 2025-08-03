@@ -20,16 +20,20 @@ class ChanApi {
         }
     }
 
-    suspend fun getThreads(): List<Thread> {
+    suspend fun getThreads(offset: Int = 0, limit: Int = 10): List<Thread> {
         return try {
             val response = client.get("https://a.4cdn.org/wsg/threads.json")
             val pages = response.body<List<Page>>()
-            val basicThreads = pages.flatMap { it.threads }
-            Log.d("ChanApi", "Parsed ${basicThreads.size} basic threads.")
+            val allBasicThreads = pages.flatMap { it.threads }
+            Log.d("ChanApi", "Total threads available: ${allBasicThreads.size}")
+            
+            // Get the requested slice of threads
+            val requestedThreads = allBasicThreads.drop(offset).take(limit)
+            Log.d("ChanApi", "Requested threads ${offset}-${offset + limit}: ${requestedThreads.size}")
             
             // Fetch complete thread information for each thread
             val completeThreads = mutableListOf<Thread>()
-            for (basicThread in basicThreads.take(10)) { // Limit to first 10 for performance
+            for (basicThread in requestedThreads) {
                 try {
                     val threadDetail = getThreadDetail(basicThread.no)
                     if (threadDetail != null) {

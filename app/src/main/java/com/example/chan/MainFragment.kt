@@ -9,6 +9,7 @@ import androidx.leanback.widget.HeaderItem
 import androidx.leanback.widget.ListRow
 import androidx.leanback.widget.ListRowPresenter
 import androidx.leanback.widget.OnItemViewClickedListener
+import androidx.leanback.widget.OnItemViewSelectedListener
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -16,37 +17,74 @@ import kotlinx.coroutines.launch
 class MainFragment : BrowseSupportFragment() {
 
     private val api = ChanApi()
+    private var allThreads = mutableListOf<Thread>()
+    private var loadedThreadCount = 0
+    private val pageSize = 10
+    private var isLoading = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         title = getString(R.string.app_name)
 
-        loadThreads()
+        loadInitialThreads()
         onItemViewClickedListener = OnItemViewClickedListener { _, item, _, _ ->
             if (item is Thread) {
                 openMedia(item)
             }
         }
         setOnSearchClickedListener {
-            loadThreads()
+            loadInitialThreads()
         }
     }
 
-    private fun loadThreads() {
+    private fun loadInitialThreads() {
+        allThreads.clear()
+        loadedThreadCount = 0
+        loadMoreThreads()
+    }
+
+    private fun loadMoreThreads() {
+        if (isLoading) return
+        
         CoroutineScope(Dispatchers.Main).launch {
-            val threads = api.getThreads()
-            Log.d("MainFragment", "Fetched ${threads.size} threads.")
-            threads.take(5).forEach { Log.d("MainFragment", "Thread details: $it") }
-            val rowsAdapter = ArrayObjectAdapter(ListRowPresenter())
-            val cardPresenter = CardPresenter()
-            val listRowAdapter = ArrayObjectAdapter(cardPresenter)
-            for (thread in threads) {
-                listRowAdapter.add(thread)
+            isLoading = true
+            val newThreads = api.getThreads(loadedThreadCount, pageSize)
+            Log.d("MainFragment", "Fetched ${newThreads.size} new threads.")
+            
+            if (newThreads.isNotEmpty()) {
+                allThreads.addAll(newThreads)
+                loadedThreadCount += newThreads.size
+                updateAdapter()
             }
-            val header = HeaderItem(0, "Threads")
-            rowsAdapter.add(ListRow(header, listRowAdapter))
-            adapter = rowsAdapter
+            isLoading = false
         }
+    }
+
+    private fun updateAdapter() {
+        val rowsAdapter = ArrayObjectAdapter(ListRowPresenter())
+        val cardPresenter = CardPresenter()
+        val listRowAdapter = ArrayObjectAdapter(cardPresenter)
+        
+        for (thread in allThreads) {
+            listRowAdapter.add(thread)
+        }
+        
+        val header = HeaderItem(0, "/wsg/")
+        rowsAdapter.add(ListRow(header, listRowAdapter))
+        adapter = rowsAdapter
+        
+        // Add scroll listener to detect when we need to load more
+        setOnItemViewSelectedListener(object : OnItemViewSelectedListener {
+            override fun onItemSelected(itemViewHolder: androidx.leanback.widget.Presenter.ViewHolder?, item: Any?, rowViewHolder: androidx.leanback.widget.RowPresenter.ViewHolder?, row: androidx.leanback.widget.Row?) {
+                if (item is Thread) {
+                    val currentIndex = allThreads.indexOf(item)
+                    // Load more when user reaches the last few items
+                    if (currentIndex >= allThreads.size - 3 && !isLoading) {
+                        loadMoreThreads()
+                    }
+                }
+            }
+        })
     }
 
     private fun openMedia(thread: Thread) {

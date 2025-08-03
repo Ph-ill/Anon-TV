@@ -2,6 +2,7 @@ package com.example.chan
 
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import androidx.leanback.app.VideoSupportFragment
@@ -19,12 +20,24 @@ class MediaFragment : VideoSupportFragment() {
         super.onViewCreated(view, savedInstanceState)
         view.setOnKeyListener { _, keyCode, event ->
             if (event.action == KeyEvent.ACTION_DOWN) {
-                if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
-                    next()
-                    return@setOnKeyListener true
-                } else if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
-                    previous()
-                    return@setOnKeyListener true
+                when (keyCode) {
+                    KeyEvent.KEYCODE_DPAD_RIGHT -> {
+                        next()
+                        return@setOnKeyListener true
+                    }
+                    KeyEvent.KEYCODE_DPAD_LEFT -> {
+                        previous()
+                        return@setOnKeyListener true
+                    }
+                    KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER -> {
+                        // Toggle play/pause
+                        if (transportGlue.isPlaying) {
+                            transportGlue.pause()
+                        } else {
+                            transportGlue.play()
+                        }
+                        return@setOnKeyListener true
+                    }
                 }
             }
             false
@@ -36,31 +49,47 @@ class MediaFragment : VideoSupportFragment() {
 
         mediaList = requireArguments().getParcelableArrayList(EXTRA_MEDIA_LIST)!!
         currentMediaIndex = requireArguments().getInt(EXTRA_CURRENT_MEDIA_INDEX)
+        
+        Log.d("MediaFragment", "Loaded ${mediaList.size} media items, starting at index $currentMediaIndex")
 
         val glueHost = VideoSupportFragmentGlueHost(this)
         transportGlue = PlaybackTransportControlGlue(requireContext(), MediaPlayerAdapter(requireContext()))
         transportGlue.host = glueHost
         transportGlue.isSeekEnabled = true
-        play(mediaList[currentMediaIndex])
+        
+        if (mediaList.isNotEmpty()) {
+            play(mediaList[currentMediaIndex])
+        }
     }
 
     private fun play(media: Media) {
-        transportGlue.title = media.filename
-        transportGlue.playerAdapter.setDataSource(Uri.parse("https://i.4cdn.org/wsg/${media.tim}${media.ext}"))
+        Log.d("MediaFragment", "Playing media: ${media.filename} (${currentMediaIndex + 1}/${mediaList.size})")
+        transportGlue.title = "${media.filename} (${currentMediaIndex + 1}/${mediaList.size})"
+        
+        val mediaUrl = "https://i.4cdn.org/wsg/${media.tim}${media.ext}"
+        Log.d("MediaFragment", "Loading media URL: $mediaUrl")
+        
+        transportGlue.playerAdapter.setDataSource(Uri.parse(mediaUrl))
         transportGlue.playWhenPrepared()
     }
 
     private fun next() {
         if (currentMediaIndex < mediaList.size - 1) {
             currentMediaIndex++
+            Log.d("MediaFragment", "Next: moving to index $currentMediaIndex")
             play(mediaList[currentMediaIndex])
+        } else {
+            Log.d("MediaFragment", "Next: already at last item")
         }
     }
 
     private fun previous() {
         if (currentMediaIndex > 0) {
             currentMediaIndex--
+            Log.d("MediaFragment", "Previous: moving to index $currentMediaIndex")
             play(mediaList[currentMediaIndex])
+        } else {
+            Log.d("MediaFragment", "Previous: already at first item")
         }
     }
 
