@@ -20,24 +20,12 @@ class MediaFragment : VideoSupportFragment() {
         super.onViewCreated(view, savedInstanceState)
         view.setOnKeyListener { _, keyCode, event ->
             if (event.action == KeyEvent.ACTION_DOWN) {
-                when (keyCode) {
-                    KeyEvent.KEYCODE_DPAD_RIGHT -> {
-                        next()
-                        return@setOnKeyListener true
-                    }
-                    KeyEvent.KEYCODE_DPAD_LEFT -> {
-                        previous()
-                        return@setOnKeyListener true
-                    }
-                    KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER -> {
-                        // Toggle play/pause
-                        if (transportGlue.isPlaying) {
-                            transportGlue.pause()
-                        } else {
-                            transportGlue.play()
-                        }
-                        return@setOnKeyListener true
-                    }
+                if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
+                    next()
+                    return@setOnKeyListener true
+                } else if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
+                    previous()
+                    return@setOnKeyListener true
                 }
             }
             false
