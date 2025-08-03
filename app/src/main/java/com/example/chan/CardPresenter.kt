@@ -26,7 +26,10 @@ class CardPresenter : Presenter() {
             Glide.with(viewHolder.view.context)
                 .load(thumbnailUrl)
                 .centerCrop()
+                .error(android.R.drawable.ic_menu_gallery)
                 .into(cardView.mainImageView)
+        } else {
+            cardView.mainImageView.setImageResource(android.R.drawable.ic_menu_gallery)
         }
     }
 
