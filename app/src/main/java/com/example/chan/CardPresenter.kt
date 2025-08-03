@@ -27,8 +27,27 @@ class CardPresenter : Presenter() {
         Log.d("CardPresenter", "Binding thread: $thread")
         val cardView = viewHolder.view as ImageCardView
 
-        cardView.titleText = thread.semantic_url?.replace("-", " ")?.replaceFirstChar { it.uppercase() } ?: "Thread No. ${thread.no}"
-        cardView.contentText = "Replies: ${thread.replies ?: 0}"
+        // Create a meaningful title from available data
+        val title = when {
+            !thread.sub.isNullOrBlank() -> thread.sub
+            !thread.semantic_url.isNullOrBlank() -> thread.semantic_url.replace("-", " ").replaceFirstChar { it.uppercase() }
+            else -> "Thread #${thread.no}"
+        }
+        
+        // Create content text with replies count and comment preview
+        val contentText = buildString {
+            append("Replies: ${thread.replies ?: 0}")
+            if (!thread.com.isNullOrBlank()) {
+                val cleanComment = removeHtmlTags(thread.com).trim()
+                if (cleanComment.isNotEmpty()) {
+                    append(" • ")
+                    append(if (cleanComment.length > 50) cleanComment.take(50) + "..." else cleanComment)
+                }
+            }
+        }
+        
+        cardView.titleText = title
+        cardView.contentText = contentText
 
         if (thread.tim != null) {
             val thumbnailUrl = "https://i.4cdn.org/wsg/${thread.tim}s.jpg"
@@ -71,5 +90,8 @@ class CardPresenter : Presenter() {
 
     private fun removeHtmlTags(html: String): String {
         return html.replace(Regex("<.*?>"), "")
+            .replace(Regex("&[a-zA-Z]+;"), " ") // Replace HTML entities
+            .replace(Regex("\\s+"), " ") // Replace multiple spaces with single space
+            .trim()
     }
 }
