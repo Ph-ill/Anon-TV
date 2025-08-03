@@ -1,6 +1,7 @@
 package com.example.chan
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.ArrayObjectAdapter
@@ -34,6 +35,8 @@ class MainFragment : BrowseSupportFragment() {
     private fun loadThreads() {
         CoroutineScope(Dispatchers.Main).launch {
             val threads = api.getThreads()
+            Log.d("MainFragment", "Fetched ${threads.size} threads.")
+            threads.take(5).forEach { Log.d("MainFragment", "Thread details: $it") }
             val rowsAdapter = ArrayObjectAdapter(ListRowPresenter())
             val cardPresenter = CardPresenter()
             val listRowAdapter = ArrayObjectAdapter(cardPresenter)

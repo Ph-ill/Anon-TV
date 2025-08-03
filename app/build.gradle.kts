@@ -2,6 +2,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.plugin.parcelize")
+    id("org.jetbrains.kotlin.plugin.serialization")
 }
 
 android {
@@ -66,4 +67,11 @@ dependencies {
 
     // Kotlin Reflection for Serialization
     implementation("org.jetbrains.kotlin:kotlin-reflect:1.9.23")
+
+    // Glide for image loading
+    implementation("com.github.bumptech.glide:glide:4.16.0")
+    annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")
+
+    // OkHttp integration for Glide
+    implementation("com.github.bumptech.glide:okhttp3-integration:4.16.0")
 }

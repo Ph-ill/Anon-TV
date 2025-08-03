@@ -14,5 +14,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "imageboard-android-tv"
+rootProject.name = "anontv"
 include(":app")
