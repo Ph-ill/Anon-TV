@@ -3,6 +3,7 @@ package com.example.chan
 import android.view.ViewGroup
 import androidx.leanback.widget.ImageCardView
 import androidx.leanback.widget.Presenter
+import com.bumptech.glide.Glide
 
 class CardPresenter : Presenter() {
 
@@ -16,12 +17,22 @@ class CardPresenter : Presenter() {
     override fun onBindViewHolder(viewHolder: ViewHolder, item: Any) {
         val thread = item as Thread
         val cardView = viewHolder.view as ImageCardView
-        cardView.titleText = thread.sub ?: ""
-        cardView.contentText = "Thread No. ${thread.no}"
+
+        cardView.titleText = thread.semantic_url?.replace("-", " ")?.replaceFirstChar { it.uppercase() } ?: thread.sub ?: "(No Subject)"
+        cardView.contentText = "Replies: ${thread.replies ?: 0}"
+
+        if (thread.tim != null) {
+            val thumbnailUrl = "https://i.4cdn.org/wsg/${thread.tim}s.jpg"
+            Glide.with(viewHolder.view.context)
+                .load(thumbnailUrl)
+                .centerCrop()
+                .into(cardView.mainImageView)
+        }
     }
 
     override fun onUnbindViewHolder(viewHolder: ViewHolder) {
         val cardView = viewHolder.view as ImageCardView
         cardView.mainImage = null
+        Glide.with(viewHolder.view.context).clear(cardView.mainImageView)
     }
 }
