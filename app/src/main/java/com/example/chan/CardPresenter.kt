@@ -3,6 +3,7 @@ package com.example.chan
 import android.graphics.drawable.Drawable
 import android.util.Log
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import androidx.leanback.widget.ImageCardView
 import androidx.leanback.widget.Presenter
 import com.bumptech.glide.Glide
@@ -11,6 +12,9 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.example.chan.Thread
+
+// Data class to represent a loading state
+data class LoadingCard(val isLoading: Boolean = true)
 
 class CardPresenter : Presenter() {
 
@@ -23,7 +27,13 @@ class CardPresenter : Presenter() {
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, item: Any) {
-        val thread = item as Thread
+        when (item) {
+            is Thread -> bindThreadCard(viewHolder, item)
+            is LoadingCard -> bindLoadingCard(viewHolder, item)
+        }
+    }
+
+    private fun bindThreadCard(viewHolder: ViewHolder, thread: Thread) {
         Log.d("CardPresenter", "Binding thread: $thread")
         val cardView = viewHolder.view as ImageCardView
 
@@ -80,6 +90,17 @@ class CardPresenter : Presenter() {
         } else {
             cardView.mainImageView.setImageResource(android.R.drawable.ic_menu_gallery)
         }
+    }
+
+    private fun bindLoadingCard(viewHolder: ViewHolder, loadingCard: LoadingCard) {
+        Log.d("CardPresenter", "Binding loading card")
+        val cardView = viewHolder.view as ImageCardView
+        
+        cardView.titleText = "Loading..."
+        cardView.contentText = "Loading more threads..."
+        
+        // Set a loading image or spinner
+        cardView.mainImageView.setImageResource(android.R.drawable.ic_popup_sync)
     }
 
     override fun onUnbindViewHolder(viewHolder: ViewHolder) {
