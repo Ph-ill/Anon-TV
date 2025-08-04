@@ -17,6 +17,45 @@ Anon TV provides a seamless experience for viewing webm and image content from p
 - Back Navigation: Easily return to the thread list.
 - Content Refresh: Refresh threads from the main menu.
 
+## Screenshots
+
+<div align="center">
+  <table>
+    <tr>
+      <td align="center">
+        <a href="Docs/Images/Menu_Sidebar.png">
+          <img src="Docs/Images/Menu_Sidebar.png" alt="Menu Sidebar" width="300"/>
+        </a>
+        <br/>
+        <em>Main menu with sidebar navigation</em>
+      </td>
+      <td align="center">
+        <a href="Docs/Images/Menu_Threads.png">
+          <img src="Docs/Images/Menu_Threads.png" alt="Menu Threads" width="300"/>
+        </a>
+        <br/>
+        <em>Thread browsing interface</em>
+      </td>
+    </tr>
+    <tr>
+      <td align="center">
+        <a href="Docs/Images/Video_Controls.png">
+          <img src="Docs/Images/Video_Controls.png" alt="Video with Controls" width="300"/>
+        </a>
+        <br/>
+        <em>Video player with controls visible</em>
+      </td>
+      <td align="center">
+        <a href="Docs/Images/Video_NoControls.png">
+          <img src="Docs/Images/Video_NoControls.png" alt="Video without Controls" width="300"/>
+        </a>
+        <br/>
+        <em>Immersive video viewing experience</em>
+      </td>
+    </tr>
+  </table>
+</div>
+
 ## Tech Stack
 
 - **Language:** Kotlin
