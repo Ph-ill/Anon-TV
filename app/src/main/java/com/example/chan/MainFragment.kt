@@ -22,7 +22,7 @@ class MainFragment : BrowseSupportFragment() {
     private val api = ChanApi()
     private var allThreads = mutableListOf<Thread>()
     private var loadedThreadCount = 0
-    private val pageSize = 5 // Changed from 10 to 5 for better performance
+    private val pageSize = 10 // Changed back from 5 to 10 for more content per load
     private var isLoading = false
     private var hasMoreThreads = true
     private var showingLoadingCard = false
@@ -175,8 +175,8 @@ class MainFragment : BrowseSupportFragment() {
                             Log.d("MainFragment", "User reached last item, starting auto-load timer")
                             
                             autoLoadJob = CoroutineScope(Dispatchers.Main).launch {
-                                delay(2000)
-                                if (isOnLastCard && !isLoading && hasMoreThreads && System.currentTimeMillis() - lastCardSelectedTime >= 2000) {
+                                delay(1000) // Reduced from 2000ms to 1000ms
+                                if (isOnLastCard && !isLoading && hasMoreThreads && System.currentTimeMillis() - lastCardSelectedTime >= 1000) {
                                     Log.d("MainFragment", "Auto-loading more threads after delay")
                                     showLoadingCard()
                                     loadMoreThreads()
