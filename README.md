@@ -4,7 +4,7 @@
   <img src="images/icon.png" alt="Anon TV Logo" width="20%"/>
 </p>
 
-An Android TV application for browsing imageboard media.
+A Google TV application for browsing imageboard media.
 
 Anon TV provides a seamless experience for viewing webm and image content from popular imageboards directly on your television. It's built with modern Android development practices, focusing on performance and user experience on TV devices.
 
@@ -69,40 +69,46 @@ Anon TV provides a seamless experience for viewing webm and image content from p
 
 There are two ways to get Anon TV running on your Android TV device: building from source or sideloading the pre-built APK.
 
-### Option 1: Sideloading the APK (Recommended for Users)
+### Option 1: Sideloading the APK (Recommended for most users)
 
-This is the easiest way to get Anon TV running on your Android TV device.
 
-#### Prerequisites
-- Android TV device or Android TV emulator
-- USB cable (for physical devices) or ADB over network
-- ADB (Android Debug Bridge) installed on your computer
+#### 1. Download the APK
 
-#### Installation Steps
+1. Visit the [Anon TV GitHub Releases Page](https://github.com/Ph-ill/Anon-TV/releases).
+2. Download the latest `.apk` file under the most recent release (e.g., `AnonTV-vX.X.X.apk`).
 
-1. **Download the APK:**
-   - Go to the [Releases page](https://github.com/Ph-ill/Anon-TV/releases)
-   - Download the latest `app-debug.apk` file
+#### 2. Prepare Your Google TV for Sideloading
 
-2. **Enable Developer Options on your Android TV:**
-   - Go to Settings → About
-   - Find "Build number" and tap it 7 times
-   - Go back to Settings → Developer options
-   - Enable "USB debugging" and "Install via USB"
+1. On your Google TV:
 
-3. **Connect your device:**
-   - **Physical device**: Connect via USB cable
-   - **Emulator**: Start Android TV emulator via Android Studio
-   - **Network**: Enable ADB over network in developer options
+   * Go to **Settings > System > About**
+   * Scroll down to **Android TV OS build** and tap it **7 times** to enable **Developer Options**.
+2. Go back to **Settings > Apps > Security & Restrictions**:
 
-4. **Install the APK:**
-   ```bash
-   adb install app-debug.apk
-   ```
+   * Enable **Unknown Sources** for the file manager or sideload app you’ll use (e.g., *Send Files to TV*, *Downloader*, or *X-plore File Manager*).
 
-5. **Launch Anon TV:**
-   - Find "Anon TV" in your Android TV app launcher
-   - Launch the app and start browsing content
+#### 3. Transfer the APK to Your Google TV
+
+Choose one of these methods:
+
+##### Option A: Using "Send Files to TV"
+
+1. Install [Send Files to TV](https://play.google.com/store/apps/details?id=com.yablio.sendfilestotv) on both your phone and Google TV.
+2. Send the `.apk` file from your phone to your Google TV.
+3. Use a file manager on your TV (like **FX File Explorer** or **X-plore**) to locate and open the APK.
+
+##### Option B: Using "Downloader" App
+
+1. Install the **Downloader** app from the Play Store on your Google TV.
+2. Open it and enter the direct link to your APK (host it elsewhere or use a GitHub raw link).
+3. Download and install the APK directly.
+
+#### 4. Install Anon TV
+
+1. Locate the transferred APK on your TV.
+2. Open it and follow the on-screen prompts to install.
+3. Launch **Anon TV** from your app drawer.
+
 
 ### Option 2: Building from Source (For Developers)
 
