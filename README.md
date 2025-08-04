@@ -67,16 +67,55 @@ Anon TV provides a seamless experience for viewing webm and image content from p
 
 ## Getting Started
 
-To get a local copy up and running, follow these simple steps.
+There are two ways to get Anon TV running on your Android TV device: building from source or sideloading the pre-built APK.
 
-### Prerequisites
+### Option 1: Sideloading the APK (Recommended for Users)
+
+This is the easiest way to get Anon TV running on your Android TV device.
+
+#### Prerequisites
+- Android TV device or Android TV emulator
+- USB cable (for physical devices) or ADB over network
+- ADB (Android Debug Bridge) installed on your computer
+
+#### Installation Steps
+
+1. **Download the APK:**
+   - Go to the [Releases page](https://github.com/Ph-ill/Anon-TV/releases)
+   - Download the latest `app-debug.apk` file
+
+2. **Enable Developer Options on your Android TV:**
+   - Go to Settings → About
+   - Find "Build number" and tap it 7 times
+   - Go back to Settings → Developer options
+   - Enable "USB debugging" and "Install via USB"
+
+3. **Connect your device:**
+   - **Physical device**: Connect via USB cable
+   - **Emulator**: Start Android TV emulator via Android Studio
+   - **Network**: Enable ADB over network in developer options
+
+4. **Install the APK:**
+   ```bash
+   adb install app-debug.apk
+   ```
+
+5. **Launch Anon TV:**
+   - Find "Anon TV" in your Android TV app launcher
+   - Launch the app and start browsing content
+
+### Option 2: Building from Source (For Developers)
+
+This approach is for developers who want to modify the code or contribute to the project.
+
+#### Prerequisites
 
 *   Android Studio (recommended for development and emulator setup)
 *   Android SDK (API 34 or higher)
 *   Java Development Kit (JDK) 1.8 or higher
 *   Git
 
-### Installation and Build
+#### Build Instructions
 
 1.  **Clone the repository:**
     ```bash
@@ -97,14 +136,25 @@ To get a local copy up and running, follow these simple steps.
     ```
     The debug APK will be located at `app/build/outputs/apk/debug/app-debug.apk`.
 
-### Running on an Emulator or Device
-
-1.  **Start an Android TV Emulator** via Android Studio's Device Manager, or connect a physical Android TV device with USB debugging enabled.
-2.  **Install the APK:**
+4.  **Install on device/emulator:**
     ```bash
     adb install app/build/outputs/apk/debug/app-debug.apk
     ```
-3.  Launch "Anon TV" from your Android TV launcher.
+
+### Troubleshooting
+
+#### Common Issues
+
+- **"App not installed" error**: Make sure USB debugging is enabled and you've allowed installation from unknown sources
+- **ADB not recognized**: Install Android SDK Platform Tools or use Android Studio's built-in ADB
+- **Build errors**: Ensure you have the correct JDK version and Android SDK installed
+- **Emulator issues**: Use Android Studio's Device Manager to create and manage Android TV emulators
+
+#### Getting ADB
+
+- **Windows**: Download [Android SDK Platform Tools](https://developer.android.com/studio/releases/platform-tools)
+- **macOS**: `brew install android-platform-tools`
+- **Linux**: `sudo apt install adb` (Ubuntu/Debian) or equivalent for your distribution
 
 ## Future Enhancements (Roadmap)
 
