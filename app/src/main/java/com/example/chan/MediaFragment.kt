@@ -1,10 +1,13 @@
 package com.example.chan
 
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
 import android.view.View
+import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.leanback.app.VideoSupportFragment
 import androidx.leanback.app.VideoSupportFragmentGlueHost
 import androidx.leanback.media.MediaPlayerAdapter
@@ -21,9 +24,17 @@ class MediaFragment : VideoSupportFragment() {
     private lateinit var mediaList: List<Media>
     private var currentMediaIndex = 0
     private var hideControlsJob: Job? = null
+    private var threadTitle: String = ""
+    private var autoAdvanceJob: Job? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        
+        // Set black background to prevent interface bleed-through
+        view.setBackgroundColor(Color.BLACK)
+        
+        // Add thread title overlay
+        addThreadTitleOverlay()
         
         // Ensure this fragment has focus
         view.requestFocus()
@@ -69,6 +80,11 @@ class MediaFragment : VideoSupportFragment() {
             // Return true to consume all key events when MediaFragment is active
             true
         }
+
+        // Play the initial media item
+        if (mediaList.isNotEmpty()) {
+            play(mediaList[currentMediaIndex])
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -76,17 +92,15 @@ class MediaFragment : VideoSupportFragment() {
 
         mediaList = requireArguments().getParcelableArrayList(EXTRA_MEDIA_LIST)!!
         currentMediaIndex = requireArguments().getInt(EXTRA_CURRENT_MEDIA_INDEX)
+        threadTitle = requireArguments().getString(EXTRA_THREAD_TITLE, "")
         
         Log.d("MediaFragment", "Loaded ${mediaList.size} media items, starting at index $currentMediaIndex")
+        Log.d("MediaFragment", "Thread title: $threadTitle")
 
         val glueHost = VideoSupportFragmentGlueHost(this)
         transportGlue = PlaybackTransportControlGlue(requireContext(), MediaPlayerAdapter(requireContext()))
         transportGlue.host = glueHost
         transportGlue.isSeekEnabled = true
-        
-        if (mediaList.isNotEmpty()) {
-            play(mediaList[currentMediaIndex])
-        }
     }
 
     override fun onResume() {
@@ -115,6 +129,26 @@ class MediaFragment : VideoSupportFragment() {
             transportGlue.host.hideControlsOverlay(true)
         }
     }
+    
+    private fun addThreadTitleOverlay() {
+        try {
+            // Inflate the overlay layout
+            val overlayView = android.view.LayoutInflater.from(requireContext())
+                .inflate(R.layout.media_fragment_overlay, null)
+            
+            // Set the thread title text
+            val titleTextView = overlayView.findViewById<TextView>(R.id.thread_title_text)
+            titleTextView.text = threadTitle
+            
+            // Add the overlay to the view
+            (view as? android.widget.FrameLayout)?.addView(overlayView, android.widget.FrameLayout.LayoutParams(
+                android.widget.FrameLayout.LayoutParams.MATCH_PARENT,
+                android.widget.FrameLayout.LayoutParams.MATCH_PARENT
+            ))
+        } catch (e: Exception) {
+            Log.e("MediaFragment", "Could not add thread title overlay", e)
+        }
+    }
 
     private fun play(media: Media) {
         Log.d("MediaFragment", "Playing media: ${media.filename} (${currentMediaIndex + 1}/${mediaList.size})")
@@ -128,6 +162,43 @@ class MediaFragment : VideoSupportFragment() {
         
         // Show controls initially when video starts
         showControls()
+        
+        // Start auto-advance monitoring
+        startAutoAdvance()
+    }
+    
+    private fun startAutoAdvance() {
+        // Cancel any existing auto-advance job
+        autoAdvanceJob?.cancel()
+        
+        autoAdvanceJob = CoroutineScope(Dispatchers.Main).launch {
+            while (true) {
+                delay(1000) // Check every second
+                
+                try {
+                    val currentPosition = transportGlue.playerAdapter.currentPosition
+                    val duration = transportGlue.playerAdapter.duration
+                    
+                    // Only advance if video has a valid duration and position
+                    if (duration > 0 && currentPosition > 0) {
+                        val timeRemaining = duration - currentPosition
+                        
+                        // Check if video is within 1 second of ending
+                        if (timeRemaining <= 1000) {
+                            Log.d("MediaFragment", "Video ended, auto-advancing to next")
+                            if (currentMediaIndex < mediaList.size - 1) {
+                                next()
+                            } else {
+                                Log.d("MediaFragment", "Reached end of thread, stopping auto-advance")
+                                break
+                            }
+                        }
+                    }
+                } catch (e: Exception) {
+                    Log.e("MediaFragment", "Error checking video progress", e)
+                }
+            }
+        }
     }
 
     private fun next() {
@@ -153,10 +224,12 @@ class MediaFragment : VideoSupportFragment() {
     override fun onDestroy() {
         super.onDestroy()
         hideControlsJob?.cancel()
+        autoAdvanceJob?.cancel()
     }
 
     companion object {
         const val EXTRA_MEDIA_LIST = "extra_media_list"
         const val EXTRA_CURRENT_MEDIA_INDEX = "extra_current_media_index"
+        const val EXTRA_THREAD_TITLE = "extra_thread_title"
     }
 }

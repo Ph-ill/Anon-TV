@@ -265,6 +265,11 @@ class MainFragment : BrowseSupportFragment() {
                 val bundle = Bundle()
                 bundle.putParcelableArrayList(MediaFragment.EXTRA_MEDIA_LIST, ArrayList(media))
                 bundle.putInt(MediaFragment.EXTRA_CURRENT_MEDIA_INDEX, 0)
+                
+                // Get thread title from subject or comment
+                val threadTitle = thread.sub ?: thread.com ?: "Thread ${thread.no}"
+                bundle.putString(MediaFragment.EXTRA_THREAD_TITLE, threadTitle)
+                
                 fragment.arguments = bundle
                 parentFragmentManager.beginTransaction()
                     .replace(android.R.id.content, fragment)
