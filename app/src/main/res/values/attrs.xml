@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Custom theme attributes -->
+    <attr name="colorPrimary" format="color" />
+    <attr name="colorPrimaryVariant" format="color" />
+    <attr name="colorSecondary" format="color" />
+    <attr name="colorSecondaryVariant" format="color" />
+    <attr name="colorSurface" format="color" />
+    <attr name="colorBackground" format="color" />
+    <attr name="colorOnPrimary" format="color" />
+    <attr name="colorOnSecondary" format="color" />
+    <attr name="colorOnSurface" format="color" />
+    <attr name="colorOnBackground" format="color" />
+    <attr name="colorAccent" format="color" />
+    <attr name="colorError" format="color" />
+    <attr name="colorTextPrimary" format="color" />
+    <attr name="colorTextSecondary" format="color" />
+    <attr name="colorTextHint" format="color" />
+    <attr name="colorDivider" format="color" />
+    
+    <!-- Gradient attributes -->
+    <attr name="backgroundGradient" format="reference" />
+    <attr name="accentGradient" format="reference" />
+    <attr name="cardGradient" format="reference" />
+    
+    <!-- Custom drawable attributes -->
+    <attr name="backgroundDrawable" format="reference" />
+    <attr name="cardBackgroundDrawable" format="reference" />
+</resources> 

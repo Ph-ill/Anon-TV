@@ -34,6 +34,7 @@ class MainFragment : BrowseSupportFragment() {
     // Keep references to the adapters so we can update them
     private var rowsAdapter: ArrayObjectAdapter? = null
     private var listRowAdapter: ArrayObjectAdapter? = null
+    private var settingsRowAdapter: ArrayObjectAdapter? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -50,8 +51,30 @@ class MainFragment : BrowseSupportFragment() {
                 is LoadingCard -> {
                     Log.d("MainFragment", "Loading card clicked, ignoring")
                 }
+                is MenuItem -> handleMenuItemClick(item)
             }
         }
+    }
+
+    private fun handleMenuItemClick(menuItem: MenuItem) {
+        when (menuItem.id) {
+            "theme_settings" -> openThemeSettings()
+            "close_app" -> closeApp()
+        }
+    }
+
+    private fun openThemeSettings() {
+        Log.d("MainFragment", "Opening theme settings")
+        val themeSettingsFragment = ThemeSettingsFragment()
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.main_frame, themeSettingsFragment)
+            .addToBackStack("main")
+            .commit()
+    }
+
+    private fun closeApp() {
+        Log.d("MainFragment", "Closing app")
+        activity?.finish()
     }
 
     private fun showLoadingCard() {
@@ -64,7 +87,7 @@ class MainFragment : BrowseSupportFragment() {
     private fun hideLoadingCard() {
         isLoading = false
         showingLoadingCard = false
-        Log.d("MainFragment", "hideLoadingCard: Removing loading card from adapter")
+        Log.d("MainFragment", "hideLoadingCard: Removing loading card from existing adapter")
         removeLoadingCardFromAdapter()
         
         // After removing loading card, we need to add the new threads that were loaded
@@ -153,8 +176,34 @@ class MainFragment : BrowseSupportFragment() {
         val cardPresenter = CardPresenter()
         listRowAdapter = ArrayObjectAdapter(cardPresenter)
         
+        // Create settings adapter using the same CardPresenter
+        settingsRowAdapter = ArrayObjectAdapter(cardPresenter)
+        
+        // Add settings menu items
+        val themeSettingsItem = MenuItem(
+            id = "theme_settings",
+            title = "Theme Settings",
+            description = "Choose your preferred theme and appearance",
+            icon = android.R.drawable.ic_menu_view,
+            action = { openThemeSettings() }
+        )
+        
+        val closeAppItem = MenuItem(
+            id = "close_app",
+            title = "Close App",
+            description = "Exit the application",
+            icon = android.R.drawable.ic_menu_close_clear_cancel,
+            action = { closeApp() }
+        )
+        
+        settingsRowAdapter?.add(themeSettingsItem)
+        settingsRowAdapter?.add(closeAppItem)
+        
         val header = HeaderItem(0, "/wsg/")
+        val settingsHeader = HeaderItem(1, "App Settings")
+        
         rowsAdapter?.add(ListRow(header, listRowAdapter!!))
+        rowsAdapter?.add(ListRow(settingsHeader, settingsRowAdapter!!))
         adapter = rowsAdapter
         
         setOnItemViewSelectedListener(object : OnItemViewSelectedListener {

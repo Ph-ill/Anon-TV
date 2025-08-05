@@ -1,5 +1,5 @@
 <resources>
-    <!-- Base theme that all other themes will inherit from -->
+    <!-- Dark theme that inherits from base theme -->
     <style name="Theme.AnonTv" parent="Theme.Leanback">
         <!-- Primary colors -->
         <item name="colorPrimary">@color/colorPrimary</item>
@@ -32,13 +32,13 @@
         <item name="colorDivider">@color/colorDivider</item>
         
         <!-- Gradient references -->
-        <item name="backgroundGradient">@drawable/bg_gradient_light</item>
-        <item name="accentGradient">@drawable/accent_gradient_light</item>
-        <item name="cardGradient">@drawable/card_gradient_light</item>
+        <item name="backgroundGradient">@drawable/bg_gradient_dark</item>
+        <item name="accentGradient">@drawable/accent_gradient_dark</item>
+        <item name="cardGradient">@drawable/card_gradient_dark</item>
         
         <!-- Background drawables -->
-        <item name="backgroundDrawable">@drawable/bg_gradient_light</item>
-        <item name="cardBackgroundDrawable">@drawable/card_gradient_light</item>
+        <item name="backgroundDrawable">@drawable/bg_gradient_dark</item>
+        <item name="cardBackgroundDrawable">@drawable/card_gradient_dark</item>
         
         <!-- Window background -->
         <item name="android:windowBackground">@color/colorBackground</item>
@@ -50,13 +50,13 @@
     
     <!-- Theme for cards and list items -->
     <style name="Theme.AnonTv.Card" parent="Theme.AnonTv">
-        <item name="android:background">@drawable/card_gradient_light</item>
+        <item name="android:background">@drawable/card_gradient_dark</item>
         <item name="android:textColor">@color/colorTextPrimary</item>
     </style>
     
     <!-- Theme for focused items -->
     <style name="Theme.AnonTv.Focused" parent="Theme.AnonTv">
-        <item name="android:background">@drawable/accent_gradient_light</item>
+        <item name="android:background">@drawable/accent_gradient_dark</item>
         <item name="android:textColor">@color/colorOnSecondary</item>
     </style>
-</resources>
+</resources> 

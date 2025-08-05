@@ -30,6 +30,7 @@ class CardPresenter : Presenter() {
         when (item) {
             is Thread -> bindThreadCard(viewHolder, item)
             is LoadingCard -> bindLoadingCard(viewHolder, item)
+            is MenuItem -> bindMenuItemCard(viewHolder, item)
         }
     }
 
@@ -101,6 +102,21 @@ class CardPresenter : Presenter() {
         
         // Set a loading image or spinner
         cardView.mainImageView.setImageResource(android.R.drawable.ic_popup_sync)
+    }
+
+    private fun bindMenuItemCard(viewHolder: ViewHolder, menuItem: MenuItem) {
+        Log.d("CardPresenter", "Binding menu item: ${menuItem.title}")
+        val cardView = viewHolder.view as ImageCardView
+        
+        cardView.titleText = menuItem.title
+        cardView.contentText = menuItem.description
+        
+        // Set icon if available
+        menuItem.icon?.let { iconRes ->
+            cardView.mainImageView.setImageResource(iconRes)
+        } ?: run {
+            cardView.mainImageView.setImageResource(android.R.drawable.ic_menu_manage)
+        }
     }
 
     override fun onUnbindViewHolder(viewHolder: ViewHolder) {

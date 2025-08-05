@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Dark theme colors -->
+    
+    <!-- Primary colors -->
+    <color name="colorPrimary">#90CAF9</color>
+    <color name="colorPrimaryVariant">#42A5F5</color>
+    <color name="colorOnPrimary">#000000</color>
+    
+    <!-- Secondary colors -->
+    <color name="colorSecondary">#FFB74D</color>
+    <color name="colorSecondaryVariant">#FFA726</color>
+    <color name="colorOnSecondary">#000000</color>
+    
+    <!-- Surface colors -->
+    <color name="colorSurface">#121212</color>
+    <color name="colorOnSurface">#FFFFFF</color>
+    
+    <!-- Background colors -->
+    <color name="colorBackground">#000000</color>
+    <color name="colorOnBackground">#FFFFFF</color>
+    
+    <!-- Accent and utility colors -->
+    <color name="colorAccent">#FF80AB</color>
+    <color name="colorError">#EF5350</color>
+    
+    <!-- Text colors -->
+    <color name="colorTextPrimary">#FFFFFF</color>
+    <color name="colorTextSecondary">#B3FFFFFF</color>
+    <color name="colorTextHint">#80FFFFFF</color>
+    
+    <!-- Divider color -->
+    <color name="colorDivider">#424242</color>
+</resources> 
