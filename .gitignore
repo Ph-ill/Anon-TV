@@ -7,3 +7,5 @@ build
 # Ignore Android Studio project files
 .idea/
 .aider*
+local.properties
+*.iml
