@@ -313,7 +313,14 @@ class MainFragment : BrowseSupportFragment() {
                 val fragment = MediaFragment()
                 val bundle = Bundle()
                 bundle.putParcelableArrayList(MediaFragment.EXTRA_MEDIA_LIST, ArrayList(media))
-                bundle.putInt(MediaFragment.EXTRA_CURRENT_MEDIA_INDEX, 0)
+
+                // Restore previously saved position if available
+                val savedIndex = ThreadPositionStore.getPosition(requireContext(), thread.no) ?: 0
+                val startIndex = savedIndex.coerceIn(0, media.size - 1)
+                bundle.putInt(MediaFragment.EXTRA_CURRENT_MEDIA_INDEX, startIndex)
+
+                // Pass thread id for saving on exit
+                bundle.putLong(MediaFragment.EXTRA_THREAD_NO, thread.no)
                 
                 // Get thread title from subject or comment
                 val threadTitle = thread.sub ?: thread.com ?: "Thread ${thread.no}"

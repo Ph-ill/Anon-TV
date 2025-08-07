@@ -26,6 +26,7 @@ class MediaFragment : VideoSupportFragment() {
     private var hideControlsJob: Job? = null
     private var threadTitle: String = ""
     private var autoAdvanceJob: Job? = null
+    private var threadNo: Long = -1L
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -71,6 +72,8 @@ class MediaFragment : VideoSupportFragment() {
                     }
                     KeyEvent.KEYCODE_BACK -> {
                         Log.d("MediaFragment", "Back button pressed - returning to thread list")
+                        // Persist current position before leaving
+                        savePositionSafely()
                         // Handle back button to return to thread list
                         parentFragmentManager.popBackStack()
                         return@setOnKeyListener true // Consume the event
@@ -93,6 +96,7 @@ class MediaFragment : VideoSupportFragment() {
         mediaList = requireArguments().getParcelableArrayList(EXTRA_MEDIA_LIST)!!
         currentMediaIndex = requireArguments().getInt(EXTRA_CURRENT_MEDIA_INDEX)
         threadTitle = requireArguments().getString(EXTRA_THREAD_TITLE, "")
+        threadNo = requireArguments().getLong(EXTRA_THREAD_NO, -1L)
         
         Log.d("MediaFragment", "Loaded ${mediaList.size} media items, starting at index $currentMediaIndex")
         Log.d("MediaFragment", "Thread title: $threadTitle")
@@ -113,6 +117,8 @@ class MediaFragment : VideoSupportFragment() {
     override fun onPause() {
         super.onPause()
         Log.d("MediaFragment", "Fragment paused")
+        // Save position on pause to handle system or user navigation
+        savePositionSafely()
     }
 
     private fun showControls() {
@@ -225,11 +231,24 @@ class MediaFragment : VideoSupportFragment() {
         super.onDestroy()
         hideControlsJob?.cancel()
         autoAdvanceJob?.cancel()
+        // Final attempt to save position
+        savePositionSafely()
     }
 
     companion object {
         const val EXTRA_MEDIA_LIST = "extra_media_list"
         const val EXTRA_CURRENT_MEDIA_INDEX = "extra_current_media_index"
         const val EXTRA_THREAD_TITLE = "extra_thread_title"
+        const val EXTRA_THREAD_NO = "extra_thread_no"
+    }
+
+    private fun savePositionSafely() {
+        try {
+            if (threadNo > 0 && mediaList.isNotEmpty()) {
+                ThreadPositionStore.savePosition(requireContext(), threadNo, currentMediaIndex)
+            }
+        } catch (e: Exception) {
+            Log.e("MediaFragment", "Failed to save thread position", e)
+        }
     }
 }
