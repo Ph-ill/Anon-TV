@@ -13,12 +13,10 @@
         android:layout_marginBottom="10dp"
         android:textColor="?attr/colorTextPrimary"
         android:textSize="18sp"
-        android:alpha="0.8"
+        android:alpha="0.5"
         android:shadowColor="?attr/colorDivider"
         android:shadowDx="2"
         android:shadowDy="2"
-        android:shadowRadius="4"
-        android:padding="10dp"
-        android:background="?attr/cardBackgroundDrawable" />
+        android:shadowRadius="4" />
 
 </FrameLayout> 

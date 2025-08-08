@@ -12,17 +12,24 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.example.chan.Thread
+import android.view.KeyEvent
+import android.content.Context
+import android.os.Handler
+import android.os.Looper
 
 // Data class to represent a loading state
 data class LoadingCard(val isLoading: Boolean = true)
 
 class CardPresenter : Presenter() {
+    
+    private var popupMenu: ThreadPopupMenu? = null
 
     override fun onCreateViewHolder(parent: ViewGroup): ViewHolder {
         val cardView = ImageCardView(parent.context)
         cardView.setMainImageDimensions(313, 176)
         cardView.isFocusable = true
         cardView.isFocusableInTouchMode = true
+        
         return ViewHolder(cardView)
     }
 
@@ -37,6 +44,34 @@ class CardPresenter : Presenter() {
     private fun bindThreadCard(viewHolder: ViewHolder, thread: Thread) {
         Log.d("CardPresenter", "Binding thread: $thread")
         val cardView = viewHolder.view as ImageCardView
+
+        // Apply dark background to the entire card
+        cardView.setBackgroundColor(0xFF1A1A1A.toInt())
+
+        // Use post to ensure styling is applied after view is created
+        cardView.post {
+            try {
+                // Try to find and style the text container
+                for (i in 0 until cardView.childCount) {
+                    val child = cardView.getChildAt(i)
+                    if (child is android.view.ViewGroup) {
+                        child.setBackgroundColor(0xFF1A1A1A.toInt())
+                        // Also style any text views within
+                        for (j in 0 until child.childCount) {
+                            val textChild = child.getChildAt(j)
+                            if (textChild is android.widget.TextView) {
+                                textChild.setTextColor(0xFFFFFFFF.toInt())
+                            }
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                Log.d("CardPresenter", "Could not style card children: ${e.message}")
+            }
+        }
+
+        // Set up long press detection for popup menu
+        setupLongPressDetection(cardView, thread)
 
         // Create a meaningful title from available data
         val title = when {
@@ -108,6 +143,31 @@ class CardPresenter : Presenter() {
         Log.d("CardPresenter", "Binding menu item: ${menuItem.title}")
         val cardView = viewHolder.view as ImageCardView
         
+        // Apply dark background to the entire card
+        cardView.setBackgroundColor(0xFF1A1A1A.toInt())
+        
+        // Use post to ensure styling is applied after view is created
+        cardView.post {
+            try {
+                // Try to find and style the text container
+                for (i in 0 until cardView.childCount) {
+                    val child = cardView.getChildAt(i)
+                    if (child is android.view.ViewGroup) {
+                        child.setBackgroundColor(0xFF1A1A1A.toInt())
+                        // Also style any text views within
+                        for (j in 0 until child.childCount) {
+                            val textChild = child.getChildAt(j)
+                            if (textChild is android.widget.TextView) {
+                                textChild.setTextColor(0xFFFFFFFF.toInt())
+                            }
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                Log.d("CardPresenter", "Could not style card children: ${e.message}")
+            }
+        }
+        
         cardView.titleText = menuItem.title
         cardView.contentText = menuItem.description
         
@@ -130,5 +190,26 @@ class CardPresenter : Presenter() {
             .replace(Regex("&[a-zA-Z]+;"), " ") // Replace HTML entities
             .replace(Regex("\\s+"), " ") // Replace multiple spaces with single space
             .trim()
+    }
+    
+    private fun setupLongPressDetection(cardView: ImageCardView, thread: Thread) {
+        // Use Android's built-in OnLongClickListener for reliable long press detection
+        cardView.setOnLongClickListener {
+            Log.d("CardPresenter", "Long click detected on thread: ${thread.no}")
+            
+            // Initialize popup menu if needed
+            if (popupMenu == null) {
+                popupMenu = ThreadPopupMenu(cardView.context)
+            }
+            
+            // Show popup menu
+            popupMenu?.show(cardView, thread)
+            Log.d("CardPresenter", "Popup menu shown for thread: ${thread.no}")
+            true // Consume the long click event to prevent normal click
+        }
+        
+        // Make sure the card view can receive focus and long clicks
+        cardView.isFocusable = true
+        cardView.isLongClickable = true
     }
 }

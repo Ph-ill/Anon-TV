@@ -17,6 +17,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+
 class MainFragment : BrowseSupportFragment() {
 
     private val api = ChanApi()
@@ -35,6 +36,8 @@ class MainFragment : BrowseSupportFragment() {
     private var rowsAdapter: ArrayObjectAdapter? = null
     private var listRowAdapter: ArrayObjectAdapter? = null
     private var settingsRowAdapter: ArrayObjectAdapter? = null
+    
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -43,17 +46,27 @@ class MainFragment : BrowseSupportFragment() {
         // setHeadersState(HEADERS_DISABLED)
         // setHeadersTransitionOnBackEnabled(true)
         Log.d("MainFragment", "onViewCreated: Sidebar should be visible, title set to Anon TV")
+        
+
+        
         // Load initial content when the fragment is created
         loadInitialThreads()
         onItemViewClickedListener = OnItemViewClickedListener { _, item, _, _ ->
+            Log.d("MainFragment", "*** CLICK LISTENER TRIGGERED *** Item: $item")
             when (item) {
-                is Thread -> openMedia(item)
+                is Thread -> {
+                    Log.d("MainFragment", "*** OPENING MEDIA FOR THREAD: ${item.no} ***")
+                    openMedia(item)
+                }
                 is LoadingCard -> {
                     Log.d("MainFragment", "Loading card clicked, ignoring")
                 }
                 is MenuItem -> handleMenuItemClick(item)
             }
         }
+        
+        // For now, let's remove the complex long press detection and just get basic functionality working
+        // We'll add a simple menu option instead of long press
     }
 
     private fun handleMenuItemClick(menuItem: MenuItem) {
