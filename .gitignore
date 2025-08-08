@@ -9,3 +9,6 @@ build
 .aider*
 local.properties
 *.iml
+
+# Ignore deployment script with local network addresses
+compile_and_deploy.sh
