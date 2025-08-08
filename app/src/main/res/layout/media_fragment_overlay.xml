@@ -11,10 +11,10 @@
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="10dp"
-        android:textColor="?attr/colorTextPrimary"
+        android:textColor="@android:color/white"
         android:textSize="18sp"
         android:alpha="0.5"
-        android:shadowColor="?attr/colorDivider"
+        android:shadowColor="@android:color/black"
         android:shadowDx="2"
         android:shadowDy="2"
         android:shadowRadius="4" />

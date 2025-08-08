@@ -4,7 +4,7 @@
     android:id="@+id/main_frame"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/backgroundDrawable"
+    android:background="@android:color/black"
     tools:context=".MainActivity">
 
     <ProgressBar
@@ -14,6 +14,6 @@
         android:layout_gravity="center"
         android:visibility="gone"
         android:indeterminate="true"
-        android:indeterminateTint="#666666" />
+        android:indeterminateTint="@android:color/white" />
 
 </FrameLayout>

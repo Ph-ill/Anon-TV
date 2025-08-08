@@ -31,8 +31,14 @@ class ThreadPopupMenu(private val context: Context, private val onFavouriteChang
             favouriteOption.text = if (isFavourite) "Unfavourite" else "Favourite"
             
             hideOption.setOnClickListener {
-                CustomToast.show(context, "Hide option clicked for thread ${thread.no}")
-                Log.d("ThreadPopupMenu", "Hide clicked for thread: ${thread.no}")
+                if (HiddenThreadsManager.hideThread(thread)) {
+                    CustomToast.showSuccess(context, "Thread hidden")
+                    Log.d("ThreadPopupMenu", "Hidden thread: ${thread.no}")
+                    onFavouriteChanged?.invoke() // Refresh the UI to remove the hidden thread
+                } else {
+                    CustomToast.show(context, "Thread already hidden")
+                    Log.d("ThreadPopupMenu", "Thread ${thread.no} was already hidden")
+                }
                 dialog?.dismiss()
             }
             

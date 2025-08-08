@@ -120,6 +120,8 @@ class MediaFragment : VideoSupportFragment() {
         // Save position on pause to handle system or user navigation
         savePositionSafely()
     }
+    
+
 
     private fun showControls() {
         Log.d("MediaFragment", "Showing video controls")

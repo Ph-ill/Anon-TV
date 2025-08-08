@@ -16,5 +16,10 @@ class App : Application() {
         android.util.Log.d("App", "About to initialize FavouritesManager")
         FavouritesManager.initialize(this)
         android.util.Log.d("App", "FavouritesManager initialized")
+        
+        // Initialize hidden threads manager
+        android.util.Log.d("App", "About to initialize HiddenThreadsManager")
+        HiddenThreadsManager.initialize(this)
+        android.util.Log.d("App", "HiddenThreadsManager initialized")
     }
 }

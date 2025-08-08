@@ -10,11 +10,7 @@ import android.widget.Toast
 object CustomToast {
     
     fun show(context: Context, message: String, duration: Int = Toast.LENGTH_SHORT) {
-        // For API level 30 and above, custom toast views are restricted
-        // So we'll fall back to regular Toast for newer Android versions
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            Toast.makeText(context, message, duration).show()
-        } else {
+        try {
             val inflater = LayoutInflater.from(context)
             val layout = inflater.inflate(R.layout.custom_toast, null)
             
@@ -26,6 +22,10 @@ object CustomToast {
             @Suppress("DEPRECATION")
             toast.view = layout
             toast.show()
+        } catch (e: Exception) {
+            // Fallback to standard toast if custom toast fails
+            android.util.Log.e("CustomToast", "Failed to show custom toast, falling back to standard", e)
+            Toast.makeText(context, message, duration).show()
         }
     }
     

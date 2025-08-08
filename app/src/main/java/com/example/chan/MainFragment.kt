@@ -53,6 +53,9 @@ class MainFragment : BrowseSupportFragment() {
         // Ensure FavouritesManager is initialized first
         FavouritesManager.initialize(requireContext())
         
+        // Ensure HiddenThreadsManager is initialized
+        HiddenThreadsManager.initialize(requireContext())
+        
         // Test basic file I/O
         val fileIOWorks = FavouritesManager.testFileIO()
         Log.d("MainFragment", "File I/O test result: $fileIOWorks")
@@ -80,6 +83,7 @@ class MainFragment : BrowseSupportFragment() {
     private fun handleMenuItemClick(menuItem: MenuItem) {
         when (menuItem.id) {
             "theme_settings" -> openThemeSettings()
+            "restore_hidden" -> restoreAllHiddenThreads()
             "close_app" -> closeApp()
         }
     }
@@ -96,6 +100,24 @@ class MainFragment : BrowseSupportFragment() {
     private fun closeApp() {
         Log.d("MainFragment", "Closing app")
         activity?.finish()
+    }
+    
+    private fun restoreAllHiddenThreads() {
+        Log.d("MainFragment", "Restoring all hidden threads")
+        val hiddenCount = HiddenThreadsManager.getHiddenThreadsCount()
+        if (HiddenThreadsManager.clearAllHiddenThreads()) {
+            // Refresh the thread list to show previously hidden threads
+            refreshThreads()
+            CustomToast.showSuccess(requireContext(), "Restored $hiddenCount hidden threads")
+        } else {
+            CustomToast.show(requireContext(), "No hidden threads to restore")
+        }
+    }
+    
+    private fun refreshThreads() {
+        Log.d("MainFragment", "Refreshing threads to update visibility")
+        // Force a refresh of the current threads display
+        updateAdapter()
     }
     
     private fun loadFavourites() {
@@ -125,6 +147,22 @@ class MainFragment : BrowseSupportFragment() {
     
     fun refreshFavourites() {
         loadFavourites()
+    }
+    
+    fun refreshUI() {
+        // Refresh both favourites and main thread list (to handle hidden threads)
+        loadFavourites()
+        
+        // For main thread list, we need to recreate the adapter to filter hidden threads
+        if (listRowAdapter != null) {
+            Log.d("MainFragment", "refreshUI: Recreating thread adapter to apply hidden thread filters")
+            listRowAdapter?.clear()
+            val visibleThreads = allThreads.filter { !HiddenThreadsManager.isHidden(it) }
+            for (thread in visibleThreads) {
+                listRowAdapter?.add(thread)
+            }
+            listRowAdapter?.notifyArrayItemRangeChanged(0, visibleThreads.size)
+        }
     }
 
     private fun showLoadingCard() {
@@ -223,7 +261,7 @@ class MainFragment : BrowseSupportFragment() {
     private fun createInitialAdapter() {
         Log.d("MainFragment", "createInitialAdapter: Creating new adapter")
         rowsAdapter = ArrayObjectAdapter(ListRowPresenter())
-        val cardPresenter = CardPresenter { refreshFavourites() }
+        val cardPresenter = CardPresenter { refreshUI() }
         listRowAdapter = ArrayObjectAdapter(cardPresenter)
         
         // Create favourites adapter using the same CardPresenter
@@ -241,6 +279,14 @@ class MainFragment : BrowseSupportFragment() {
             action = { openThemeSettings() }
         )
         
+        val restoreHiddenItem = MenuItem(
+            id = "restore_hidden",
+            title = "Restore Hidden Threads",
+            description = "Unhide all previously hidden threads",
+            icon = android.R.drawable.ic_menu_revert,
+            action = { restoreAllHiddenThreads() }
+        )
+        
         val closeAppItem = MenuItem(
             id = "close_app",
             title = "Close App",
@@ -250,6 +296,7 @@ class MainFragment : BrowseSupportFragment() {
         )
         
         settingsRowAdapter?.add(themeSettingsItem)
+        settingsRowAdapter?.add(restoreHiddenItem)
         settingsRowAdapter?.add(closeAppItem)
         
         val header = HeaderItem(0, "/wsg/")
@@ -283,8 +330,8 @@ class MainFragment : BrowseSupportFragment() {
                             Log.d("MainFragment", "User reached last item, starting auto-load timer")
                             
                             autoLoadJob = CoroutineScope(Dispatchers.Main).launch {
-                                delay(1000) // Reduced from 2000ms to 1000ms
-                                if (isOnLastCard && !isLoading && hasMoreThreads && System.currentTimeMillis() - lastCardSelectedTime >= 1000) {
+                                delay(1) // Changed from 1000ms to 1ms for immediate loading
+                                if (isOnLastCard && !isLoading && hasMoreThreads && System.currentTimeMillis() - lastCardSelectedTime >= 1) {
                                     Log.d("MainFragment", "Auto-loading more threads after delay")
                                     showLoadingCard()
                                     loadMoreThreads()
@@ -311,7 +358,10 @@ class MainFragment : BrowseSupportFragment() {
         Log.d("MainFragment", "addNewThreadsToAdapter: Adding ${newThreads.size} new threads to existing adapter")
         listRowAdapter?.let { adapter ->
             val startSize = adapter.size()
-            for (thread in newThreads) {
+            // Filter out hidden threads
+            val visibleNewThreads = newThreads.filter { !HiddenThreadsManager.isHidden(it) }
+            Log.d("MainFragment", "addNewThreadsToAdapter: Adding ${visibleNewThreads.size} visible threads (${newThreads.size - visibleNewThreads.size} hidden)")
+            for (thread in visibleNewThreads) {
                 adapter.add(thread)
                 Log.d("MainFragment", "Added thread ${thread.no} to adapter")
             }
@@ -319,7 +369,7 @@ class MainFragment : BrowseSupportFragment() {
             Log.d("MainFragment", "Adapter size changed from $startSize to $endSize")
             
             // Force the adapter to notify of changes
-            adapter.notifyArrayItemRangeChanged(startSize, newThreads.size)
+            adapter.notifyArrayItemRangeChanged(startSize, visibleNewThreads.size)
         }
     }
 
@@ -345,8 +395,10 @@ class MainFragment : BrowseSupportFragment() {
         Log.d("MainFragment", "updateAdapter: Setting up row with ${allThreads.size} threads")
         createInitialAdapter()
         
-        // Add all threads to the adapter
-        for (thread in allThreads) {
+        // Add all threads to the adapter, filtering out hidden ones
+        val visibleThreads = allThreads.filter { !HiddenThreadsManager.isHidden(it) }
+        Log.d("MainFragment", "updateAdapter: Adding ${visibleThreads.size} visible threads (${allThreads.size - visibleThreads.size} hidden)")
+        for (thread in visibleThreads) {
             listRowAdapter?.add(thread)
         }
     }
