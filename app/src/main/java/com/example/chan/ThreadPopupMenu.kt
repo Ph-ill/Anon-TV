@@ -5,10 +5,9 @@ import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.widget.TextView
-import android.widget.Toast
 import androidx.leanback.widget.ImageCardView
 
-class ThreadPopupMenu(private val context: Context) {
+class ThreadPopupMenu(private val context: Context, private val onFavouriteChanged: (() -> Unit)? = null) {
     
     private var dialog: AlertDialog? = null
     
@@ -27,15 +26,32 @@ class ThreadPopupMenu(private val context: Context) {
             val hideOption = customView.findViewById<TextView>(R.id.hide_option)
             val favouriteOption = customView.findViewById<TextView>(R.id.favourite_option)
             
+            // Check if thread is already in favourites and update text accordingly
+            val isFavourite = FavouritesManager.isFavourite(thread)
+            favouriteOption.text = if (isFavourite) "Unfavourite" else "Favourite"
+            
             hideOption.setOnClickListener {
-                Toast.makeText(context, "Hide option clicked for thread ${thread.no}", Toast.LENGTH_SHORT).show()
+                CustomToast.show(context, "Hide option clicked for thread ${thread.no}")
                 Log.d("ThreadPopupMenu", "Hide clicked for thread: ${thread.no}")
                 dialog?.dismiss()
             }
             
             favouriteOption.setOnClickListener {
-                Toast.makeText(context, "Favourite option clicked for thread ${thread.no}", Toast.LENGTH_SHORT).show()
-                Log.d("ThreadPopupMenu", "Favourite clicked for thread: ${thread.no}")
+                if (isFavourite) {
+                    // Remove from favourites
+                    if (FavouritesManager.removeFavourite(thread)) {
+                        CustomToast.showSuccess(context, "Removed from favourites")
+                        Log.d("ThreadPopupMenu", "Unfavourited thread: ${thread.no}")
+                        onFavouriteChanged?.invoke()
+                    }
+                } else {
+                    // Add to favourites
+                    if (FavouritesManager.addFavourite(thread)) {
+                        CustomToast.showSuccess(context, "Added to favourites")
+                        Log.d("ThreadPopupMenu", "Favourited thread: ${thread.no}")
+                        onFavouriteChanged?.invoke()
+                    }
+                }
                 dialog?.dismiss()
             }
             
@@ -54,7 +70,7 @@ class ThreadPopupMenu(private val context: Context) {
             
         } catch (e: Exception) {
             Log.e("ThreadPopupMenu", "Error showing popup menu", e)
-            Toast.makeText(context, "Error showing menu: ${e.message}", Toast.LENGTH_SHORT).show()
+            CustomToast.showError(context, "Error showing menu: ${e.message}")
         }
     }
     

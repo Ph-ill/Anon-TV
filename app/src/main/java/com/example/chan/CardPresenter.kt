@@ -20,7 +20,7 @@ import android.os.Looper
 // Data class to represent a loading state
 data class LoadingCard(val isLoading: Boolean = true)
 
-class CardPresenter : Presenter() {
+class CardPresenter(private val onFavouriteChanged: (() -> Unit)? = null) : Presenter() {
     
     private var popupMenu: ThreadPopupMenu? = null
 
@@ -199,7 +199,7 @@ class CardPresenter : Presenter() {
             
             // Initialize popup menu if needed
             if (popupMenu == null) {
-                popupMenu = ThreadPopupMenu(cardView.context)
+                popupMenu = ThreadPopupMenu(cardView.context, onFavouriteChanged)
             }
             
             // Show popup menu

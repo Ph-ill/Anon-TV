@@ -35,6 +35,7 @@ class MainFragment : BrowseSupportFragment() {
     // Keep references to the adapters so we can update them
     private var rowsAdapter: ArrayObjectAdapter? = null
     private var listRowAdapter: ArrayObjectAdapter? = null
+    private var favouritesRowAdapter: ArrayObjectAdapter? = null
     private var settingsRowAdapter: ArrayObjectAdapter? = null
     
 
@@ -48,6 +49,13 @@ class MainFragment : BrowseSupportFragment() {
         Log.d("MainFragment", "onViewCreated: Sidebar should be visible, title set to Anon TV")
         
 
+        
+        // Ensure FavouritesManager is initialized first
+        FavouritesManager.initialize(requireContext())
+        
+        // Test basic file I/O
+        val fileIOWorks = FavouritesManager.testFileIO()
+        Log.d("MainFragment", "File I/O test result: $fileIOWorks")
         
         // Load initial content when the fragment is created
         loadInitialThreads()
@@ -88,6 +96,35 @@ class MainFragment : BrowseSupportFragment() {
     private fun closeApp() {
         Log.d("MainFragment", "Closing app")
         activity?.finish()
+    }
+    
+    private fun loadFavourites() {
+        Log.d("MainFragment", "loadFavourites called")
+        Log.d("MainFragment", "favouritesRowAdapter is null: ${favouritesRowAdapter == null}")
+        
+        if (favouritesRowAdapter == null) {
+            Log.e("MainFragment", "favouritesRowAdapter is null! Cannot load favourites")
+            return
+        }
+        
+        val favourites = FavouritesManager.getFavourites()
+        Log.d("MainFragment", "FavouritesManager returned ${favourites.size} favourites")
+        
+        favouritesRowAdapter?.clear()
+        favourites.forEach { thread ->
+            Log.d("MainFragment", "Adding favourite thread: ${thread.no} - ${thread.sub}")
+            favouritesRowAdapter?.add(thread)
+        }
+        
+        // Force adapter to notify changes
+        favouritesRowAdapter?.notifyArrayItemRangeChanged(0, favourites.size)
+        
+        Log.d("MainFragment", "Successfully loaded ${favourites.size} favourite threads into adapter")
+        Log.d("MainFragment", "Adapter size after loading: ${favouritesRowAdapter?.size()}")
+    }
+    
+    fun refreshFavourites() {
+        loadFavourites()
     }
 
     private fun showLoadingCard() {
@@ -186,8 +223,11 @@ class MainFragment : BrowseSupportFragment() {
     private fun createInitialAdapter() {
         Log.d("MainFragment", "createInitialAdapter: Creating new adapter")
         rowsAdapter = ArrayObjectAdapter(ListRowPresenter())
-        val cardPresenter = CardPresenter()
+        val cardPresenter = CardPresenter { refreshFavourites() }
         listRowAdapter = ArrayObjectAdapter(cardPresenter)
+        
+        // Create favourites adapter using the same CardPresenter
+        favouritesRowAdapter = ArrayObjectAdapter(cardPresenter)
         
         // Create settings adapter using the same CardPresenter
         settingsRowAdapter = ArrayObjectAdapter(cardPresenter)
@@ -213,11 +253,17 @@ class MainFragment : BrowseSupportFragment() {
         settingsRowAdapter?.add(closeAppItem)
         
         val header = HeaderItem(0, "/wsg/")
-        val settingsHeader = HeaderItem(1, "App Settings")
+        val favouritesHeader = HeaderItem(1, "Favourites")
+        val settingsHeader = HeaderItem(2, "App Settings")
         
         rowsAdapter?.add(ListRow(header, listRowAdapter!!))
+        rowsAdapter?.add(ListRow(favouritesHeader, favouritesRowAdapter!!))
         rowsAdapter?.add(ListRow(settingsHeader, settingsRowAdapter!!))
         adapter = rowsAdapter
+        
+        // Now that adapters are created, load favourites
+        Log.d("MainFragment", "Adapters created, now loading favourites...")
+        loadFavourites()
         
         setOnItemViewSelectedListener(object : OnItemViewSelectedListener {
             override fun onItemSelected(itemViewHolder: androidx.leanback.widget.Presenter.ViewHolder?, item: Any?, rowViewHolder: androidx.leanback.widget.RowPresenter.ViewHolder?, row: androidx.leanback.widget.Row?) {
