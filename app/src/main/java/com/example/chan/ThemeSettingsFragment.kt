@@ -42,7 +42,11 @@ class ThemeSettingsFragment : BrowseSupportFragment() {
             icon = android.R.drawable.ic_menu_view,
             action = { 
                 themeManager.setThemeMode(ThemeManager.ThemeMode.LIGHT)
-                activity?.recreate()
+                // Navigate back to main fragment first, then recreate after a delay
+                parentFragmentManager.popBackStack()
+                view?.postDelayed({
+                    activity?.recreate()
+                }, 100)
             }
         )
         
@@ -53,7 +57,11 @@ class ThemeSettingsFragment : BrowseSupportFragment() {
             icon = android.R.drawable.ic_menu_view,
             action = { 
                 themeManager.setThemeMode(ThemeManager.ThemeMode.DARK)
-                activity?.recreate()
+                // Navigate back to main fragment first, then recreate after a delay
+                parentFragmentManager.popBackStack()
+                view?.postDelayed({
+                    activity?.recreate()
+                }, 100)
             }
         )
         
@@ -64,7 +72,11 @@ class ThemeSettingsFragment : BrowseSupportFragment() {
             icon = android.R.drawable.ic_menu_view,
             action = { 
                 themeManager.setThemeMode(ThemeManager.ThemeMode.SYSTEM)
-                activity?.recreate()
+                // Navigate back to main fragment first, then recreate after a delay
+                parentFragmentManager.popBackStack()
+                view?.postDelayed({
+                    activity?.recreate()
+                }, 100)
             }
         )
         

@@ -20,6 +20,20 @@ import kotlinx.coroutines.launch
 
 class MainFragment : BrowseSupportFragment() {
 
+    companion object {
+        // Cache thread data to survive activity recreation during theme changes
+        private var cachedThreads = mutableListOf<Thread>()
+        private var cachedLoadedCount = 0
+        private var lastCacheTime = 0L
+        private const val CACHE_DURATION_MS = 5 * 60 * 1000L // 5 minutes
+        
+        fun clearCache() {
+            cachedThreads.clear()
+            cachedLoadedCount = 0
+            lastCacheTime = 0L
+        }
+    }
+
     private val api = ChanApi()
     private var allThreads = mutableListOf<Thread>()
     private var loadedThreadCount = 0
@@ -193,17 +207,49 @@ class MainFragment : BrowseSupportFragment() {
 
     private fun loadInitialThreads() {
         Log.d("MainFragment", "loadInitialThreads called")
-        allThreads.clear()
-        loadedThreadCount = 0
-        isLoading = true
-        hasMoreThreads = true
-        showingLoadingCard = false
-        isOnLastCard = false
-        lastCardSelectedTime = 0L
-        currentSelectionPosition = 0
-        autoLoadJob?.cancel()
-        showLoadingSpinner()
-        loadMoreThreads()
+        
+        // Check if we have recent cached data (for theme changes)
+        val currentTime = System.currentTimeMillis()
+        val cacheAge = currentTime - lastCacheTime
+        val hasFreshCache = cachedThreads.isNotEmpty() && cacheAge < CACHE_DURATION_MS
+        
+        if (hasFreshCache) {
+            Log.d("MainFragment", "Using cached thread data (${cachedThreads.size} threads, cache age: ${cacheAge}ms)")
+            
+            // Restore from cache
+            allThreads.clear()
+            allThreads.addAll(cachedThreads)
+            loadedThreadCount = cachedLoadedCount
+            
+            // Set up initial state without loading
+            isLoading = false
+            hasMoreThreads = true
+            showingLoadingCard = false
+            isOnLastCard = false
+            lastCardSelectedTime = 0L
+            currentSelectionPosition = 0
+            autoLoadJob?.cancel()
+            
+            // Hide loading spinner and update adapter immediately
+            hideLoadingSpinner()
+            updateAdapter()
+        } else {
+            Log.d("MainFragment", "No fresh cache available, loading from API")
+            
+            // Clear cache and load fresh data
+            clearCache()
+            allThreads.clear()
+            loadedThreadCount = 0
+            isLoading = true
+            hasMoreThreads = true
+            showingLoadingCard = false
+            isOnLastCard = false
+            lastCardSelectedTime = 0L
+            currentSelectionPosition = 0
+            autoLoadJob?.cancel()
+            showLoadingSpinner()
+            loadMoreThreads()
+        }
     }
 
     private fun loadMoreThreads() {
@@ -216,6 +262,14 @@ class MainFragment : BrowseSupportFragment() {
                 if (newThreads.isNotEmpty()) {
                     allThreads.addAll(newThreads)
                     loadedThreadCount += newThreads.size
+                    
+                    // Update cache with current thread data
+                    cachedThreads.clear()
+                    cachedThreads.addAll(allThreads)
+                    cachedLoadedCount = loadedThreadCount
+                    lastCacheTime = System.currentTimeMillis()
+                    Log.d("MainFragment", "Updated cache with ${cachedThreads.size} threads")
+                    
                     Log.d("MainFragment", "Updating adapter with ${allThreads.size} total threads")
                     Log.d("MainFragment", "allThreads size: ${allThreads.size}, loadedThreadCount: $loadedThreadCount")
                     
