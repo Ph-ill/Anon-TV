@@ -23,7 +23,7 @@ class MainFragment : BrowseSupportFragment() {
     private val api = ChanApi()
     private var allThreads = mutableListOf<Thread>()
     private var loadedThreadCount = 0
-    private val pageSize = 10 // Changed back from 5 to 10 for more content per load
+    private val pageSize = 30 // Testing 30 threads per load for better performance
     private var isLoading = false
     private var hasMoreThreads = true
     private var showingLoadingCard = false
@@ -275,7 +275,7 @@ class MainFragment : BrowseSupportFragment() {
             id = "theme_settings",
             title = "Theme Settings",
             description = "Choose your preferred theme and appearance",
-            icon = android.R.drawable.ic_menu_view,
+            icon = R.drawable.ic_theme_settings,
             action = { openThemeSettings() }
         )
         
@@ -283,7 +283,7 @@ class MainFragment : BrowseSupportFragment() {
             id = "restore_hidden",
             title = "Restore Hidden Threads",
             description = "Unhide all previously hidden threads",
-            icon = android.R.drawable.ic_menu_revert,
+            icon = R.drawable.ic_restore_hidden,
             action = { restoreAllHiddenThreads() }
         )
         
@@ -291,7 +291,7 @@ class MainFragment : BrowseSupportFragment() {
             id = "close_app",
             title = "Close App",
             description = "Exit the application",
-            icon = android.R.drawable.ic_menu_close_clear_cancel,
+            icon = R.drawable.ic_close_app,
             action = { closeApp() }
         )
         

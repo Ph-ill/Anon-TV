@@ -100,7 +100,7 @@ class CardPresenter(private val onFavouriteChanged: (() -> Unit)? = null) : Pres
             Glide.with(viewHolder.view.context)
                 .load(thumbnailUrl)
                 .centerCrop()
-                .error(android.R.drawable.ic_menu_gallery)
+                .error(R.drawable.ic_no_media)
                 .listener(object : RequestListener<Drawable> {
                     override fun onLoadFailed(
                         e: GlideException?,
@@ -109,6 +109,9 @@ class CardPresenter(private val onFavouriteChanged: (() -> Unit)? = null) : Pres
                         isFirstResource: Boolean
                     ): Boolean {
                         Log.e("CardPresenter", "Glide load failed for $thumbnailUrl", e)
+                        // Configure image view for icon display when image fails
+                        cardView.mainImageView.scaleType = android.widget.ImageView.ScaleType.CENTER_INSIDE
+                        cardView.mainImageView.setPadding(32, 32, 32, 32)
                         return false
                     }
 
@@ -124,7 +127,10 @@ class CardPresenter(private val onFavouriteChanged: (() -> Unit)? = null) : Pres
                 })
                 .into(cardView.mainImageView)
         } else {
-            cardView.mainImageView.setImageResource(android.R.drawable.ic_menu_gallery)
+            // Configure image view for icon display
+            cardView.mainImageView.scaleType = android.widget.ImageView.ScaleType.CENTER_INSIDE
+            cardView.mainImageView.setPadding(32, 32, 32, 32)
+            cardView.mainImageView.setImageResource(R.drawable.ic_no_media)
         }
     }
 
@@ -135,8 +141,11 @@ class CardPresenter(private val onFavouriteChanged: (() -> Unit)? = null) : Pres
         cardView.titleText = "Loading..."
         cardView.contentText = "Loading more threads..."
         
+        // Configure image view for icon display
+        cardView.mainImageView.scaleType = android.widget.ImageView.ScaleType.CENTER_INSIDE
+        cardView.mainImageView.setPadding(32, 32, 32, 32)
         // Set a loading image or spinner
-        cardView.mainImageView.setImageResource(android.R.drawable.ic_popup_sync)
+        cardView.mainImageView.setImageResource(R.drawable.ic_loading)
     }
 
     private fun bindMenuItemCard(viewHolder: ViewHolder, menuItem: MenuItem) {
@@ -171,11 +180,15 @@ class CardPresenter(private val onFavouriteChanged: (() -> Unit)? = null) : Pres
         cardView.titleText = menuItem.title
         cardView.contentText = menuItem.description
         
+        // Configure image view for icon display
+        cardView.mainImageView.scaleType = android.widget.ImageView.ScaleType.CENTER_INSIDE
+        cardView.mainImageView.setPadding(32, 32, 32, 32)
+        
         // Set icon if available
         menuItem.icon?.let { iconRes ->
             cardView.mainImageView.setImageResource(iconRes)
         } ?: run {
-            cardView.mainImageView.setImageResource(android.R.drawable.ic_menu_manage)
+            cardView.mainImageView.setImageResource(R.drawable.ic_menu_default)
         }
     }
 
