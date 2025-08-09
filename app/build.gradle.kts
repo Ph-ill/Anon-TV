@@ -13,8 +13,8 @@ android {
         applicationId = "com.example.chan"
         minSdk = 21
         targetSdk = 34
-        versionCode = 10
-        versionName = "0.2.2"
+        versionCode = 11
+        versionName = "0.2.3"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
