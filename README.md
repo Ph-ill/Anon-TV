@@ -43,15 +43,15 @@ Built with Kotlin and Android Leanback, Anon TV provides a seamless TV-optimized
   <table>
     <tr>
       <td align="center">
-        <a href="Docs/Images/Menu_Sidebar.png">
-          <img src="Docs/Images/Menu_Sidebar.png" alt="Menu Sidebar" width="300"/>
+        <a href="Docs/Images/Menu_Sidebar.png?v=2">
+          <img src="Docs/Images/Menu_Sidebar.png?v=2" alt="Menu Sidebar" width="300"/>
         </a>
         <br/>
         <em>Main interface with sidebar navigation</em>
       </td>
       <td align="center">
-        <a href="Docs/Images/Menu_Threads.png">
-          <img src="Docs/Images/Menu_Threads.png" alt="Menu Threads" width="300"/>
+        <a href="Docs/Images/Menu_Threads.png?v=2">
+          <img src="Docs/Images/Menu_Threads.png?v=2" alt="Menu Threads" width="300"/>
         </a>
         <br/>
         <em>Thread browsing with high-resolution icons</em>
@@ -59,15 +59,15 @@ Built with Kotlin and Android Leanback, Anon TV provides a seamless TV-optimized
     </tr>
     <tr>
       <td align="center">
-        <a href="Docs/Images/Video_Controls.png">
-          <img src="Docs/Images/Video_Controls.png" alt="Video with Controls" width="300"/>
+        <a href="Docs/Images/Video_Controls.png?v=2">
+          <img src="Docs/Images/Video_Controls.png?v=2" alt="Video with Controls" width="300"/>
         </a>
         <br/>
         <em>Video player with overlay controls</em>
       </td>
       <td align="center">
-        <a href="Docs/Images/Video_NoControls.png">
-          <img src="Docs/Images/Video_NoControls.png" alt="Video without Controls" width="300"/>
+        <a href="Docs/Images/Video_NoControls.png?v=2">
+          <img src="Docs/Images/Video_NoControls.png?v=2" alt="Video without Controls" width="300"/>
         </a>
         <br/>
         <em>Full-screen video playback</em>
