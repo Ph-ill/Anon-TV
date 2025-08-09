@@ -4,20 +4,36 @@
   <img src="images/icon.png" alt="Anon TV Logo" width="20%"/>
 </p>
 
-**Anon TV** is a Google TV application for browsing imageboard media.
+**Anon TV** is a Google TV application for browsing imageboard media with a modern, customizable interface.
 
-Built with modern Android development practices, Anon TV offers a seamless experience for viewing `.webm` and image content from popular imageboards directly on your television. It emphasizes performance and intuitive navigation on TV devices.
+Built with Kotlin and Android Leanback, Anon TV provides a seamless TV-optimized experience for viewing `.webm` videos and images from imageboards. Features multiple themes, content organization, and performance-optimized browsing.
 
 ---
 
 ## ✨ Features
 
-* **Thread Browsing** – Explore and view active threads.
-* **Media Playback** – Watch `.webm` videos and view images from selected threads.
-* **Full-Screen Viewer** – Enjoy an immersive viewing experience.
-* **Remote Navigation** – Use your TV remote (left/right) to navigate media.
-* **Back Navigation** – Quickly return to thread view.
-* **Content Refresh** – Reload threads directly from the main menu.
+### Core Functionality
+* **Thread Browsing** – Browse and view active threads with 30-thread batch loading
+* **Media Playback** – Watch `.webm` videos and view images with ExoPlayer integration
+* **TV Remote Navigation** – Full D-pad and remote control support
+* **Auto-Loading** – Automatic content loading when reaching the end of the list
+
+### Content Management
+* **Favourites System** – Save threads for quick access across app restarts
+* **Hide Threads** – Remove unwanted threads from the browse list
+* **Restore Hidden Threads** – Bulk restore all previously hidden content
+* **Thread Position Memory** – Resume media playback from last viewed position
+
+### Interface & Theming
+* **Multiple Themes** – Light, Dark, and System theme options
+* **Instant Theme Switching** – Thread data caching eliminates loading delays
+* **High-Resolution Icons** – 48dp vector graphics optimized for TV displays
+* **Custom Popup Menus** – Long-press thread cards for quick actions
+
+### Performance
+* **Smart Caching** – 5-minute thread data cache for smooth theme switching
+* **Batch Loading** – Load 30 threads per request for faster browsing
+* **Memory Efficient** – Automatic cache expiration and cleanup
 
 ---
 
@@ -31,14 +47,14 @@ Built with modern Android development practices, Anon TV offers a seamless exper
           <img src="Docs/Images/Menu_Sidebar.png" alt="Menu Sidebar" width="300"/>
         </a>
         <br/>
-        <em>Main menu with sidebar navigation</em>
+        <em>Main interface with sidebar navigation</em>
       </td>
       <td align="center">
         <a href="Docs/Images/Menu_Threads.png">
           <img src="Docs/Images/Menu_Threads.png" alt="Menu Threads" width="300"/>
         </a>
         <br/>
-        <em>Thread browsing interface</em>
+        <em>Thread browsing with high-resolution icons</em>
       </td>
     </tr>
     <tr>
@@ -47,14 +63,14 @@ Built with modern Android development practices, Anon TV offers a seamless exper
           <img src="Docs/Images/Video_Controls.png" alt="Video with Controls" width="300"/>
         </a>
         <br/>
-        <em>Video player with controls</em>
+        <em>Video player with overlay controls</em>
       </td>
       <td align="center">
         <a href="Docs/Images/Video_NoControls.png">
           <img src="Docs/Images/Video_NoControls.png" alt="Video without Controls" width="300"/>
         </a>
         <br/>
-        <em>Immersive video playback</em>
+        <em>Full-screen video playback</em>
       </td>
     </tr>
   </table>
@@ -65,121 +81,146 @@ Built with modern Android development practices, Anon TV offers a seamless exper
 ## 🛠 Tech Stack
 
 * **Language:** Kotlin
-* **Build Tool:** Gradle
-* **Media Player:** ExoPlayer
-* **Networking:** Ktor
-* **Serialization:** Kotlinx Serialization
-* **Android Libraries:** AndroidX & Leanback
+* **Build System:** Gradle 8.14.3
+* **Media Player:** ExoPlayer with Leanback integration
+* **Networking:** Ktor HTTP client
+* **Serialization:** Kotlinx Serialization JSON
+* **UI Framework:** Android Leanback for TV interfaces
+* **Image Loading:** Glide with caching
+* **Architecture:** Fragment-based with MVVM patterns
 
 ---
 
-## 🚀 Getting Started
+## 🚀 Installation
 
-You can run Anon TV on your Android TV by either **sideloading the APK** or **building from source**.
+### Download Pre-built APK (Recommended)
 
-### Option 1: Sideloading the APK (Recommended)
-
-#### 1. Download the APK
-
+#### 1. Download Latest Release
 * Visit the [releases page](https://github.com/Ph-ill/Anon-TV/releases)
-* Download the latest `.apk` (e.g., `AnonTV-vX.X.X.apk`)
+* Download the latest `app-debug.apk`
 
-#### 2. Prepare Your Google TV
+#### 2. Enable Developer Options on Google TV
+```
+Settings > System > About > Android TV OS build (tap 7 times)
+Settings > Apps > Security & Restrictions > Unknown sources (enable)
+```
 
-* Enable **Developer Options**:
+#### 3. Install APK
+**Method A: Send Files to TV**
+1. Install [Send Files to TV](https://play.google.com/store/apps/details?id=com.yablio.sendfilestotv)
+2. Transfer APK from phone to TV
+3. Install using file manager
 
-  * Go to **Settings > System > About**
-  * Tap **Android TV OS build** 7 times
-* Enable **Unknown Sources**:
+**Method B: ADB Installation**
+```bash
+adb install app-debug.apk
+```
 
-  * Go to **Settings > Apps > Security & Restrictions**
-  * Allow unknown sources for your file manager or sideloading app
-
-#### 3. Transfer the APK to Your TV
-
-**Option A: Send Files to TV**
-
-1. Install [Send Files to TV](https://play.google.com/store/apps/details?id=com.yablio.sendfilestotv) on both phone and TV
-2. Transfer the `.apk` to your TV
-3. Open the file using a manager like **X-plore** or **FX File Explorer**
-
-**Option B: Downloader App**
-
-1. Install **Downloader** from the Play Store
-2. Open it and enter the direct APK URL (e.g., from GitHub)
-3. Download and install
-
-#### 4. Install Anon TV
-
-* Locate and open the `.apk` file
-* Follow on-screen prompts
-* Launch Anon TV from the app drawer
+**Method C: Downloader App**
+1. Install Downloader from Google Play Store
+2. Enter APK URL from GitHub releases
+3. Download and install directly
 
 ---
 
-### Option 2: Building from Source (For Developers)
+## 🔧 Building from Source
 
-#### Prerequisites
-
-* Android Studio
-* Android SDK (API 34+)
-* JDK 1.8+
+### Prerequisites
+* Android Studio 2024.1+
+* Android SDK API 34
+* JDK 8+
 * Git
 
-#### Build Instructions
-
+### Build Steps
 ```bash
 git clone https://github.com/Ph-ill/Anon-TV.git
 cd Anon-TV
 ```
 
-Create `local.properties` with your SDK path:
-
+Create `local.properties`:
 ```properties
-sdk.dir=/path/to/your/android/sdk
+sdk.dir=/path/to/android/sdk
 ```
 
-Build the app:
-
+Build debug APK:
 ```bash
 ./gradlew assembleDebug
 ```
 
-Install the APK via ADB:
-
+Install to device:
 ```bash
 adb install app/build/outputs/apk/debug/app-debug.apk
 ```
 
----
-
-### ADB Installation
-
-* **Windows**: [Platform Tools Download](https://developer.android.com/studio/releases/platform-tools)
-* **macOS**: `brew install android-platform-tools`
-* **Linux**: `sudo apt install adb` or similar
+### Development Tools
+* **ADB**: `sudo apt install adb` (Linux) / `brew install android-platform-tools` (macOS)
+* **GitHub CLI**: `gh` for automated releases and issue management
 
 ---
 
-## 🗺 Roadmap
+## 📖 User Guide
 
-* Multi-imageboard support
-* Search functionality
-* Enhanced UI and customization
-* Local caching for offline use
-* Settings screen
-* Better error handling and user feedback
+### Navigation
+* **D-Pad**: Navigate between thread cards and menu items
+* **OK/Enter**: Select threads or menu options
+* **Back**: Return to previous screen or exit video
+* **Long Press**: Show thread action menu (Favourite/Hide)
+
+### Menu Structure
+* **Threads (/wsg/)**: Main thread browsing area
+* **Favourites**: Saved threads for quick access
+* **App Settings**: Theme selection and hidden thread management
+
+### Theme Management
+* Access via App Settings > Theme Settings
+* Choose from Light, Dark, or System themes
+* Instant switching with cached thread data
+
+### Content Management
+* **Long press** any thread card for action menu
+* **Favourite**: Save to Favourites section (persistent across restarts)
+* **Hide**: Remove from thread list
+* **Restore Hidden**: Bulk restore all hidden threads from App Settings
+
+---
+
+## 📚 Release Naming Convention
+
+APK files follow this pattern for consistency:
+```
+AnonTV-v[VERSION].apk
+```
+Example: `AnonTV-v0.2.3.apk`
+
+All releases use debug APKs as the app will not be published to Google Play Store.
 
 ---
 
 ## 🤝 Contributing
 
-Pull requests and suggestions are welcome!
-Open an issue or fork and contribute directly.
+### Git Workflow
+* Commit messages should be factual and technical
+* Use conventional commit prefixes: `feat:`, `fix:`, `perf:`, `chore:`
+* Avoid marketing language in commit notes
+
+### Development
+1. Fork the repository
+2. Create feature branch
+3. Make changes with appropriate tests
+4. Submit pull request with clear description
 
 ---
 
 ## 📄 License
 
-Licensed under the **MIT License**.
-See the `LICENSE` file for details.
+Licensed under the **MIT License**. See `LICENSE` file for details.
+
+---
+
+## 🔄 Version History
+
+* **v0.2.3** - Thread caching optimization, instant theme switching
+* **v0.2.2** - Enhanced icons, 30-thread batch loading
+* **v0.2.1** - Favourites system, hide threads, popup menus
+* **v0.2.0** - Theming engine, performance improvements
+* **v0.1.0** - Initial release with basic browsing and playback
