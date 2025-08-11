@@ -4,7 +4,7 @@
   <img src="images/icon.png" alt="Anon TV Logo" width="20%"/>
 </p>
 
-An Android TV application for browsing and viewing media content from web forums.
+An Android TV application for browsing and viewing media content from popular imageboards.
 
 ## Features
 
