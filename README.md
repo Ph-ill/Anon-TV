@@ -9,13 +9,11 @@ An Android TV application for browsing and viewing media content from web forums
 ## Features
 
 - Browse threads with media content
-- Video playback with custom controls
+- Video playback (H.264, AAC, MP4, WebM)
 - Dark theme support
 - Favorites system with persistent storage
 - Hide threads functionality
-- Long-press popup menus
-- High-resolution UI icons
-- Thread data caching for smooth theme switching
+- Thread data caching
 
 ## Screenshots
 
