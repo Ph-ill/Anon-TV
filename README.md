@@ -1,5 +1,9 @@
 # Anon TV
 
+<p align="center">
+  <img src="images/icon.png" alt="Anon TV Logo" width="20%"/>
+</p>
+
 An Android TV application for browsing and viewing media content from web forums.
 
 ## Features
@@ -11,6 +15,7 @@ An Android TV application for browsing and viewing media content from web forums
 - Hide threads functionality
 - Long-press popup menus
 - High-resolution UI icons
+- Thread data caching for smooth theme switching
 
 ## Screenshots
 
@@ -59,9 +64,35 @@ An Android TV application for browsing and viewing media content from web forums
 
 ## Installation
 
+### Download Pre-built APK
+
 1. Download the latest APK from [Releases](https://github.com/Ph-ill/Anon-TV/releases)
 2. Install on your Android TV device
-3. Launch the application
+
+### Sideloading Instructions
+
+#### Enable Developer Options
+```
+Settings > System > About > Android TV OS build (tap 7 times)
+Settings > Apps > Security & Restrictions > Unknown sources (enable)
+```
+
+#### Installation Methods
+
+**Method A: Send Files to TV**
+1. Install [Send Files to TV](https://play.google.com/store/apps/details?id=com.yablio.sendfilestotv)
+2. Transfer APK from phone to TV
+3. Install using file manager
+
+**Method B: ADB Installation**
+```bash
+adb install app-debug.apk
+```
+
+**Method C: Downloader App**
+1. Install Downloader from Google Play Store
+2. Enter APK URL from GitHub releases
+3. Download and install directly
 
 ## Usage
 
@@ -78,6 +109,14 @@ Built with:
 - Android Leanback framework
 - Ktor HTTP client
 - Kotlinx Serialization
+
+### Building from Source
+
+```bash
+git clone https://github.com/Ph-ill/Anon-TV.git
+cd Anon-TV
+./gradlew assembleDebug
+```
 
 ## License
 
